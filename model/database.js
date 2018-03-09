@@ -54,10 +54,19 @@ class mongodb {
                     miss : 0,
                     sunk : 0
                 },
-                match: null
+                match: []
             }, (err, result) => {
                 if (err) return reject(err);
                 resolve(result);
+            })
+        })
+    }
+
+    createNewMatch(player_name, new_match){
+        return new Promise((resolve, reject)=>{
+            this.db.collection('battleship').update({player_name:player_name}, { $push: { "match": new_match } }, (err, data) => {
+                if (err) return reject(err);
+                resolve(data.result.n > 0 ? data : false);
             })
         })
     }
