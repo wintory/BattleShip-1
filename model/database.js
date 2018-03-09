@@ -43,6 +43,25 @@ class mongodb {
         })
     }
 
+    registerNewPlayer(player_name){
+        return new Promise((resolve, reject)=>{
+            this.db.collection('battleship').insertOne({
+                player_name : player_name,
+                created : new Date(),
+                stats: {
+                    game : 0,
+                    hits : 0,
+                    miss : 0,
+                    sunk : 0
+                },
+                match: null
+            }, (err, result) => {
+                if (err) return reject(err);
+                resolve(result);
+            })
+        })
+    }
+
 }
 
 module.exports = mongodb;
