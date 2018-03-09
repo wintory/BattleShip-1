@@ -4,10 +4,11 @@ const game_system = require('../model/game_system');
 
 router.post('/new', (req, res) => {
     game_system.startMatch(req.body.player_name).then(result => {
-        res.status(200);
         if (result) {
+            res.status(201);
             res.json({ status: true, message: "New game succesful !." });
         } else {
+            res.status(200);
             res.json({ status: false, message: "You not finish your last match yet. " })
         }
     }, err => {
