@@ -1,0 +1,9 @@
+{
+    "Database": {
+        "ip": "localhost",
+        "port": "27017",
+        "user": "battleship",
+        "password": "battleship_very_secure_password",
+        "database": "battleship"
+    }
+}
