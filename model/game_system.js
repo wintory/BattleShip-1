@@ -8,11 +8,11 @@ exports.startMatch = (player_name) => {
     return new Promise((resolve, reject) => {
         db.getPlayerData(player_name).then((data) => {
             if (data) {
-                if(data.match.filter(match => !match.ending).length == 0){
+                if (data.match.filter(match => !match.ending).length == 0) {
                     // don't have playing match
                     db.createNewMatch(player_name, generateMatch()).then((result) => {
                         console.log(result);
-                        
+
                         if (result) {
                             resolve(true);
                         }
@@ -33,6 +33,14 @@ exports.startMatch = (player_name) => {
                 }, err => reject(err))
             }
         })
+    })
+}
+
+exports.deactivePlayer = (player_name) => {
+    return new Promise((resolve, reject) => {
+        db.deletePlayer(player_name).then((result) => {
+            resolve(result.ok == 1);
+        }, err => reject(err))
     })
 }
 

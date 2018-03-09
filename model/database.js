@@ -71,6 +71,14 @@ class mongodb {
         })
     }
 
+    deletePlayer(player_name){
+        return new Promise((resolve, reject)=>{
+            this.db.collection('battleship').remove({player_name:player_name}, (err, result)=>{
+                if (err) return reject(err);
+                resolve(result);
+            })
+        });
+    }
 }
 
 module.exports = mongodb;
