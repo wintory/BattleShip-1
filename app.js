@@ -15,7 +15,7 @@ let db_server = new mongodb(config.Database, (err) => {
                 app.use(bodyParser.urlencoded({ extended: true }));
                 app.use(require('./controllers'))
                 app.listen(config.api.port, function () {
-                    console.log('Battleship listen on port 3000');
+                    console.log(`Battleship listen on port ${config.api.port}`);
                 })
             }
         });
