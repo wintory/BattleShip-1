@@ -6,7 +6,32 @@
         "password": "battleship_very_secure_password",
         "database": "battleship"
     },
-    "api":{
-        "port":3000
+    "api": {
+        "port": 3000
+    },
+    "game": {
+        "size": 10,
+        "ship_data": [
+            {
+                "name": "Battleship",
+                "amount": 1,
+                "size": 4
+            },
+            {
+                "name": "Cruisers",
+                "amount": 2,
+                "size": 3
+            },
+            {
+                "name": "Destroyers",
+                "amount": 3,
+                "size": 2
+            },
+            {
+                "name": "Submarines",
+                "amount": 4,
+                "size": 1
+            }
+        ]
     }
 }
