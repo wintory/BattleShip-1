@@ -174,8 +174,8 @@ function generateMatch() {
             let ship_generate = { size: ship.size };
             do {
                 ship_generate.choose_position = {
-                    x: Math.round(Math.random() * game_config.size),
-                    y: Math.round(Math.random() * game_config.size)
+                    x: Math.round(Math.random() * (game_config.size-1)),
+                    y: Math.round(Math.random() * (game_config.size-1))
                 };
                 ship_generate.ship_aspect = Math.round(Math.random());
             } while (!isLegal(ship_generate, match_data.ocean))
