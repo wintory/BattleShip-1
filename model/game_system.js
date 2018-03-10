@@ -45,7 +45,7 @@ exports.deactivePlayer = (player_name) => {
 exports.giveup = (player_name)=>{
     return new Promise((resolve,reject)=>{
         db.giveupMatch(player_name).then(result =>{
-            resolve(result.result.ok == 1);
+            resolve(result ? result.result.ok == 1 : false);
         }, err => reject(err))
     })
 }
