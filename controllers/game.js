@@ -3,18 +3,20 @@ const router = express.Router();
 const game_system = require('../model/game_system');
 
 router.post('/new', (req, res) => {
-    game_system.startMatch(req.body.player_name).then(result => {
-        if (result) {
-            res.status(201);
-            res.json({ status: true, message: "New game succesful !." });
-        } else {
-            res.status(200);
-            res.json({ status: false, message: "You not finish your last match yet. " })
-        }
-    }, err => {
-        res.status(500);
-        res.json({ error: err });
-    });
+    if (req.body.player_name) {
+        game_system.startMatch(req.body.player_name).then(result => {
+            if (result) {
+                res.status(201);
+                res.json({ status: true, message: "New game succesful !." });
+            } else {
+                res.status(200);
+                res.json({ status: false, message: "You not finish your last match yet. " })
+            }
+        }, err => {
+            res.status(500);
+            res.json({ error: err });
+        });
+    }
 })
 
 router.delete('/deactive', (req, res) => {
