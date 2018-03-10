@@ -35,7 +35,7 @@ exports.startMatch = (player_name) => {
 exports.deactivePlayer = (player_name) => {
     return new Promise((resolve, reject) => {
         db.deletePlayer(player_name).then((result) => {
-            resolve(result.result.ok == 1);
+            resolve(result.result.n == 1);
         }, err => reject(err))
     })
 }
