@@ -90,9 +90,17 @@ class mongodb {
 
     checkShooted(player_name, x, y) {
         return new Promise((resolve, reject) => {
-            this.getMatchData(player_name).then(match => {
-                let shooted = match.shooted.filter(shoot => (shoot.x == x) && (shoot.y == y));
+            this.getShootHistory(player_name).then(shoot_history => {
+                let shooted = shoot_history.filter(shoot => (shoot.x == x) && (shoot.y == y));
                 resolve(shooted.length > 0);
+            }, err => reject(err));
+        })
+    }
+
+    getShootHistory(player_name) {
+        return new Promise((resolve, reject) => {
+            this.getMatchData(player_name).then(match => {
+                resolve(match ? match.shooted : undefined);
             }, err => reject(err));
         })
     }
@@ -101,7 +109,7 @@ class mongodb {
         return new Promise((resolve, reject) => {
             this.db.collection('battleship').findOne({ player_name: player_name, "match.ending": false }, (err, data) => {
                 if (err) return reject(err);
-                resolve(data.match.filter(match => !match.ending)[0]);
+                resolve(data && data.match ? data.match.filter(match => !match.ending)[0] : undefined);
             })
         })
     }
@@ -114,6 +122,7 @@ class mongodb {
             })
         })
     }
+
 
     updateShootedShip(player_name, ocean) {
         return new Promise((resolve, reject) => {

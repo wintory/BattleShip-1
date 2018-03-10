@@ -45,7 +45,7 @@ exports.giveup = (player_name) => {
         checkPlayerData(player_name).then((result) => {
             if (result) {
                 db.endMatch(player_name).then(result => {
-                    resolve({ err: undefined, result: result ? result.result.ok == 1 : false });
+                    resolve({ result: result ? result.result.ok == 1 : false });
                 }, err => reject(err))
             } else {
                 resolve({ err: "Player not found." })
@@ -72,7 +72,7 @@ exports.shoot = (player_name, x, y) => {
                                         if (checkIfShipSunk(ocean, ocean[hit_index].ship_id)) {
                                             sunkShip(player_name, ocean[hit_index].ship_id).then(({ err, ship, win }) => { // update ship sunk
                                                 if (err) return resolve({ err });
-                                                resolve({ err: undefined, msg: win ? `Win ! You completed the game in ${win.turns} moves` : `You just sank the ${ship.ship_name}` , win});
+                                                resolve({ err: undefined, msg: win ? `Win ! You completed the game in ${win.turns} moves` : `You just sank the ${ship.ship_name}`, win });
                                             })
                                         } else {
                                             resolve({ err: undefined, msg: "Hit" });
@@ -90,6 +90,20 @@ exports.shoot = (player_name, x, y) => {
                 }
             } else {
                 resolve({ err: "Player not found." });
+            }
+        })
+    })
+}
+
+exports.getShootHistory = (player_name) => {
+    return new Promise((resolve, reject) => {
+        checkPlayerData(player_name).then(exist => {
+            if (exist) {
+                db.getShootHistory(player_name).then(history => {
+                    resolve({history});
+                }, err => reject(err));
+            } else {
+                resolve({err : "Player not found."});
             }
         })
     })

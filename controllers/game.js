@@ -22,10 +22,11 @@ router.post('/new', (req, res) => {
 router.delete('/deactive', (req, res) => {
     if (req.body.player_name) {
         game_system.deactivePlayer(req.body.player_name).then(result => {
-            res.status(200);
             if (result) {
+                res.status(200);
                 res.json({ status: true, message: "Delete player successful !." });
             } else {
+                res.status(404);
                 res.json({ status: false, message: "Player name doesn't exist." })
             }
         }, err => {
@@ -38,11 +39,15 @@ router.delete('/deactive', (req, res) => {
 router.post('/giveup', (req, res) => {
     if (req.body.player_name) {
         game_system.giveup(req.body.player_name).then(({ err, result }) => {
-            res.status(200);
-            if (err) return res.json({ status: false, message: err });
+            if (err) {
+                res.status(404)
+                return res.json({ status: false, message: err });
+            }
             if (result) {
+                res.status(200);
                 res.json({ status: true, message: "You just giveup on your last match !." });
             } else {
+                res.status(200);
                 res.json({ status: false, message: "You have no playing match." })
             }
         }, err => {
@@ -56,6 +61,7 @@ router.post('/shoot/:x/:y', (req, res) => {
     if (req.body.player_name) {
         game_system.shoot(req.body.player_name, req.params.x, req.params.y).then(({ err, msg }) => {
             if (err) return res.json({ status: false, message: err })
+            res.status(200);
             res.json({ status: true, message: msg })
         }, err => {
             res.status(500);
@@ -63,4 +69,22 @@ router.post('/shoot/:x/:y', (req, res) => {
         })
     }
 })
+
+router.post('/shoot/history', (req, res) => {
+    if (req.body.player_name) {
+        game_system.getShootHistory(req.body.player_name).then(({ err, history }) => {
+            if (err) return res.json({ status: false, message: err })
+            if (!history) {
+                res.status(404);
+                return res.json({ status: false, message: "Shoot history not found." })
+            }
+            res.status(200);
+            res.json({ status: true, history })
+        }, err => {
+            res.status(500);
+            res.json({ error: err });
+        })
+    }
+})
+
 module.exports = router
