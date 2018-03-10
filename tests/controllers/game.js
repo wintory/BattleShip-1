@@ -23,7 +23,7 @@ describe("Controller API Test", () => {
             })
     });
 
-    it("New game again without ending last match", (done) => {
+    it("Can't new game again without ending last match", (done) => {
         chai.request(app.app)
             .post('/game/new')
             .send({ "player_name": player_name })
@@ -34,7 +34,7 @@ describe("Controller API Test", () => {
             })
     });
 
-    it("Giveup last match", (done) => {
+    it("Give up last match", (done) => {
         chai.request(app.app)
             .post('/game/giveup')
             .send({ "player_name": player_name })
@@ -45,7 +45,18 @@ describe("Controller API Test", () => {
             })
     });
 
-    it("New game again after giveup last match", (done) => {
+    it("Can't give up twice after give up on last match", (done) => {
+        chai.request(app.app)
+            .post('/game/giveup')
+            .send({ "player_name": player_name })
+            .end((err, res) => {
+                assert.equal(res.status, 200);
+                assert.equal(res.body.status, false);
+                done();
+            })
+    });
+
+    it("New game again after give up on last match", (done) => {
         chai.request(app.app)
             .post('/game/new')
             .send({ "player_name": player_name })
