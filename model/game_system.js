@@ -58,35 +58,39 @@ exports.shoot = (player_name, x, y) => {
     return new Promise((resolve, reject) => {
         checkPlayerData(player_name).then((result) => {
             if (result) { // have player data
-                if (x >= game_config.size || y >= game_config.size ||
-                    x < 0 || y < 0) {
-                    return resolve({ err: `Shoot position over map !. You must shoot between (0,0) till (${game_config.size - 1},${game_config.size - 1})` });
-                } else {
-                    db.checkShooted(player_name, x, y).then(shoot_duplicate => {
-                        if (!shoot_duplicate) {
-                            getShootPosition(player_name, x, y).then(ocean => {
-                                if (ocean) { // hit something 
-                                    let hit_index = ocean.findIndex(ship => (ship.x == x) && (ship.y == y))
-                                    ocean[hit_index].hit = true;
-                                    db.updateShootedShip(player_name, ocean).then((result) => { // update ocean's hit data
-                                        if (checkIfShipSunk(ocean, ocean[hit_index].ship_id)) {
-                                            sunkShip(player_name, ocean[hit_index].ship_id).then(({ err, ship, win }) => { // update ship sunk
-                                                if (err) return resolve({ err });
-                                                resolve({ err: undefined, msg: win ? `Win ! You completed the game in ${win.turns} moves` : `You just sank the ${ship.ship_name}`, win });
-                                            })
-                                        } else {
-                                            resolve({ err: undefined, msg: "Hit" });
-                                        }
-                                    })
-                                } else { // miss
-                                    resolve({ err: undefined, msg: "Miss" });
-                                }
-                                db.addShootData(player_name, x, y, ocean ? true : false); // updated shooted history
-                            })
-                        } else {
-                            return resolve({ err: `The position (${x},${y}) already shooted.` });
-                        }
-                    }, err => reject(err));
+                if (result.match && result.match.filter(match => !match.ending).length > 0) { // have playing match
+                    if (x >= game_config.size || y >= game_config.size ||
+                        x < 0 || y < 0) {
+                        return resolve({ err: `Shoot position over map !. You must shoot between (0,0) till (${game_config.size - 1},${game_config.size - 1})` });
+                    } else {
+                        db.checkShooted(player_name, x, y).then(shoot_duplicate => {
+                            if (!shoot_duplicate) {
+                                getShootPosition(player_name, x, y).then(ocean => {
+                                    if (ocean) { // hit something 
+                                        let hit_index = ocean.findIndex(ship => (ship.x == x) && (ship.y == y))
+                                        ocean[hit_index].hit = true;
+                                        db.updateShootedShip(player_name, ocean).then((result) => { // update ocean's hit data
+                                            if (checkIfShipSunk(ocean, ocean[hit_index].ship_id)) {
+                                                sunkShip(player_name, ocean[hit_index].ship_id).then(({ err, ship, win }) => { // update ship sunk
+                                                    if (err) return resolve({ err });
+                                                    resolve({ err: undefined, msg: win ? `Win ! You completed the game in ${win.turns} moves` : `You just sank the ${ship.ship_name}`, win });
+                                                })
+                                            } else {
+                                                resolve({ err: undefined, msg: "Hit" });
+                                            }
+                                        })
+                                    } else { // miss
+                                        resolve({ err: undefined, msg: "Miss" });
+                                    }
+                                    db.addShootData(player_name, x, y, ocean ? true : false); // updated shooted history
+                                })
+                            } else {
+                                return resolve({ err: `The position (${x},${y}) already shooted.` });
+                            }
+                        }, err => reject(err));
+                    }
+                }else{
+                    resolve({err: "Match playing not found."})
                 }
             } else {
                 resolve({ err: "Player not found." });
@@ -100,10 +104,10 @@ exports.getShootHistory = (player_name) => {
         checkPlayerData(player_name).then(exist => {
             if (exist) {
                 db.getShootHistory(player_name).then(history => {
-                    resolve({history});
+                    resolve({ history });
                 }, err => reject(err));
             } else {
-                resolve({err : "Player not found."});
+                resolve({ err: "Player not found." });
             }
         })
     })
@@ -174,8 +178,8 @@ function generateMatch() {
             let ship_generate = { size: ship.size };
             do {
                 ship_generate.choose_position = {
-                    x: Math.round(Math.random() * (game_config.size-1)),
-                    y: Math.round(Math.random() * (game_config.size-1))
+                    x: Math.round(Math.random() * (game_config.size - 1)),
+                    y: Math.round(Math.random() * (game_config.size - 1))
                 };
                 ship_generate.ship_aspect = Math.round(Math.random());
             } while (!isLegal(ship_generate, match_data.ocean))
