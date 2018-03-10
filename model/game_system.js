@@ -90,10 +90,10 @@ exports.shoot = (player_name, x, y) => {
                         }, err => reject(err));
                     }
                 }else{
-                    resolve({err: "Match playing not found."})
+                    resolve({err: "Match playing not found.", not_found : true})
                 }
             } else {
-                resolve({ err: "Player not found." });
+                resolve({ err: "Player not found.", not_found : true });
             }
         })
     })

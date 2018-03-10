@@ -59,10 +59,15 @@ router.post('/giveup', (req, res) => {
 
 router.post('/shoot/:x/:y', (req, res) => {
     if (req.body.player_name) {
-        game_system.shoot(req.body.player_name, req.params.x, req.params.y).then(({ err, msg , win}) => {
-            if (err) return res.json({ status: false, message: err })
+        game_system.shoot(req.body.player_name, req.params.x, req.params.y).then(({ err, not_found, msg, win }) => {
+            if (err) {
+                if(not_found){
+                    res.status(404);
+                }
+                return res.json({ status: false, message: err })
+            }
             res.status(200);
-            res.json({ status: true, message: msg , win })
+            res.json({ status: true, message: msg, win })
         }, err => {
             res.status(500);
             res.json({ error: err });
