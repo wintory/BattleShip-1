@@ -130,7 +130,7 @@ function sunkShip(player_name, ship_id) {
                     if (match_data.ship_left - 1 == 0) { // no ship left
                         db.endMatch(player_name).then(result => {
                             db.increaseWin(player_name);
-                            resolve({ err: undefined, ship: ships[sunk_index], win: { turns: match_data.turn + 1 } });
+                            resolve({ err: undefined, ship: ships[sunk_index], win: { turns: match_data.turn } });
                         }, err => reject(err))
                     } else {
                         resolve({ err: undefined, ship: ships[sunk_index] });
@@ -155,7 +155,8 @@ function generateMatch() {
     let auto_id = idMaker();
     for (let ship of game_config.ship_data) {
         let amount = 0;
-        do {
+        ship.amount = ship.amount < 0 ? 0 : ship.amount; // ship.amount can't be negative
+        while (amount < ship.amount) {// while generated ship less than amount of each type
             let ship_generate = { size: ship.size };
             do {
                 ship_generate.choose_position = {
@@ -185,7 +186,7 @@ function generateMatch() {
             }
             match_data.ship_left++;
             amount++;
-        } while (amount < ship.amount) // while generated ship less than amount of each type
+        }
     }
     return match_data;
 }
