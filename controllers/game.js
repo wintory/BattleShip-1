@@ -61,7 +61,7 @@ router.post('/shoot/:x/:y', (req, res) => {
     if (req.body.player_name) {
         game_system.shoot(req.body.player_name, req.params.x, req.params.y).then(({ err, not_found, msg, win }) => {
             if (err) {
-                if(not_found){
+                if (not_found) {
                     res.status(404);
                 }
                 return res.json({ status: false, message: err })
@@ -78,10 +78,33 @@ router.post('/shoot/:x/:y', (req, res) => {
 router.post('/shoot/history', (req, res) => {
     if (req.body.player_name) {
         game_system.getShootHistory(req.body.player_name).then(({ err, history }) => {
-            if (err) return res.json({ status: false, message: err })
+            if (err) {
+                res.status(404);
+                return res.json({ status: false, message: err })
+            }
             if (!history) {
                 res.status(404);
                 return res.json({ status: false, message: "Shoot history not found." })
+            }
+            res.status(200);
+            res.json({ status: true, history })
+        }, err => {
+            res.status(500);
+            res.json({ error: err });
+        })
+    }
+})
+
+router.post('/match/history', (req, res) => {
+    if (req.body.player_name) {
+        game_system.getMatchHistory(req.body.player_name).then(({ err, history }) => {
+            if (err) {
+                res.status(404);
+                return res.json({ status: false, message: err })
+            }
+            if (!history) {
+                res.status(404);
+                return res.json({ status: false, message: "Match history not found." })
             }
             res.status(200);
             res.json({ status: true, history })

@@ -114,6 +114,15 @@ class mongodb {
         })
     }
 
+    getHistoryMatch(player_name){
+        return new Promise((resolve,reject)=>{
+            this.db.collection('battleship').findOne({ player_name: player_name}, (err, data) => {
+                if (err) return reject(err);
+                resolve(data && data.match ? data.match.filter(match => match.ending) : undefined);
+            })
+        })
+    }
+
     getPlayerStatus(player_name) {
         return new Promise((resolve, reject) => {
             this.db.collection('battleship').findOne({ player_name: player_name }, (err, data) => {

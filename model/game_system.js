@@ -89,11 +89,11 @@ exports.shoot = (player_name, x, y) => {
                             }
                         }, err => reject(err));
                     }
-                }else{
-                    resolve({err: "Match playing not found.", not_found : true})
+                } else {
+                    resolve({ err: "Match playing not found.", not_found: true })
                 }
             } else {
-                resolve({ err: "Player not found.", not_found : true });
+                resolve({ err: "Player not found.", not_found: true });
             }
         })
     })
@@ -106,6 +106,20 @@ exports.getShootHistory = (player_name) => {
                 db.getShootHistory(player_name).then(history => {
                     resolve({ history });
                 }, err => reject(err));
+            } else {
+                resolve({ err: "Player not found." });
+            }
+        })
+    })
+}
+
+exports.getMatchHistory = (player_name) => {
+    return new Promise((resolve, reject) => {
+        checkPlayerData(player_name).then(exist => {
+            if (exist) {
+                db.getHistoryMatch(player_name).then(match_history => {
+                    resolve({ history: match_history });
+                }, err => reject(err))
             } else {
                 resolve({ err: "Player not found." });
             }
