@@ -1,6 +1,8 @@
 let mongodb = require('./model/database');
 let config = require('./config');
 let express = require('express');
+let EventEmitter = require('events');
+let myEmitter = new EventEmitter();
 let app = express();
 let bodyParser = require('body-parser')
 
@@ -16,6 +18,7 @@ let db_server = new mongodb(config.Database, (err) => {
                 app.use(require('./controllers'))
                 app.listen(config.api.port, function () {
                     console.log(`Battleship listen on port ${config.api.port}`);
+                    myEmitter.emit('server_ready');
                 })
             }
         });
@@ -23,3 +26,5 @@ let db_server = new mongodb(config.Database, (err) => {
 });
 
 module.exports.db = db_server;
+module.exports.app = app;
+module.exports.event = myEmitter;
