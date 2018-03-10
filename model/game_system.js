@@ -67,17 +67,24 @@ exports.shoot = (player_name, x, y) => {
                 } else {
                     db.checkShooted(player_name, x, y).then(result => {
                         if (!result) {
-                            db.getShootPosition(player_name, x, y).then(ocean => {
+                            getShootPosition(player_name, x, y).then(ocean => {
                                 if (ocean) { // hit something 
-                                    let hited = ocean.findIndex(ship => (ship.x == x) && (ship.y == y))
-                                    ocean[hited].hit = true;
-                                    db.updateShootedShip(player_name, ocean).then((result) => { // update hited data
-                                        resolve({ err: undefined, msg: "Hit" });
+                                    let hit_index = ocean.findIndex(ship => (ship.x == x) && (ship.y == y))
+                                    ocean[hit_index].hit = true;
+                                    db.updateShootedShip(player_name, ocean).then((result) => { // update ocean's hit data
+                                        if (checkIfShipSunk(ocean, ocean[hit_index].ship_id)) {
+                                            sunkShip(player_name, ocean[hit_index].ship_id).then(({ err, ship }) => { // update ship sunk
+                                                if (err) return resolve({ err });
+                                                resolve({ err: undefined, msg: `You just sank the ${ship.ship_name}` });
+                                            })
+                                        } else {
+                                            resolve({ err: undefined, msg: "Hit" });
+                                        }
                                     })
                                 } else { // miss
                                     resolve({ err: undefined, msg: "Miss" });
                                 }
-                                // db.addShootData(player_name, x, y, ocean ? true : false);
+                                db.addShootData(player_name, x, y, ocean ? true : false); // updated shooted history
                             })
                         } else {
                             return resolve({ err: `The position (${x},${y}) already shooted.` });
@@ -96,6 +103,39 @@ function checkPlayerData(player_name) {
         db.getPlayerData(player_name).then(result => {
             resolve(result);
         }, err => reject(err));
+    })
+}
+
+function getShootPosition(player_name, x, y) {
+    return new Promise((resolve, reject) => {
+        db.getMatchData(player_name).then((match_data) => {
+            let ocean = match_data.ocean;
+            let isHit = ocean.filter(ship_position => ship_position.x == x && ship_position.y == y).length > 0;
+            resolve(isHit ? ocean : undefined);
+        })
+    })
+}
+
+function checkIfShipSunk(ocean, ship_id) {
+    let ship_alive = ocean.filter(ship => (ship.ship_id == ship_id) && !ship.hit); // get ship that not hit.
+    return ship_alive.length == 0;
+}
+
+function sunkShip(player_name, ship_id) {
+    return new Promise((resolve, reject) => {
+        db.getMatchData(player_name).then(match_data => {
+            let ships = match_data.ships;
+            let sunk_index = ships.findIndex(ship => ship.id == ship_id);
+            ships[sunk_index].sunk = true;
+            db.updateShips(player_name, ships).then((result) => {
+                if (result) {
+                    db.decreaseShipLeft(player_name);
+                    resolve({ err: undefined, ship: ships[sunk_index] });
+                } else {
+                    resolve({ err: "Ocean data not updated." });
+                }
+            })
+        })
     })
 }
 
@@ -180,7 +220,6 @@ function isLegal(ship, ocean) {
             ship_position.x <= end_detect.x &&
             ship_position.y >= start_detect.y &&
             ship_position.y <= end_detect.y) {
-
             return false;
         }
     }

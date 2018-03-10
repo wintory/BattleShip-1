@@ -98,16 +98,6 @@ class mongodb {
         })
     }
 
-    getShootPosition(player_name, x, y) {
-        return new Promise((resolve, reject) => {
-            this.db.collection('battleship').findOne({ player_name: player_name, "match.ending": false, "match.ocean.x": parseInt(x), "match.ocean.y": parseInt(y) }, (err, data) => {
-                if (err) return reject(err);
-                let result = data ? data.match.filter(match => !match.ending)[0].ocean : null;
-                resolve(result);
-            })
-        })
-    }
-
     updateShootedShip(player_name, ocean) {
         return new Promise((resolve, reject) => {
             this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
@@ -131,6 +121,42 @@ class mongodb {
                 resolve(data.result.n > 0 ? data : false);
             })
         })
+    }
+
+    getMatchData(player_name) {
+        return new Promise((resolve, reject) => {
+            this.db.collection('battleship').findOne({ player_name: player_name, "match.ending": false }, (err, data) => {
+                if (err) return reject(err);
+                resolve(data.match.filter(match => !match.ending)[0]);
+            })
+        })
+    }
+
+    updateShips(player_name, ships) {
+        return new Promise((resolve, reject) => {
+            this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
+                { $set: { "match.$.ships": ships } }, (err, data) => {
+                    if (err) return reject(err);
+                    resolve(data.result.n > 0 ? data : false);
+                })
+        })
+    }
+
+    updateOcean(player_name, ocean) {
+        return new Promise((resolve, reject) => {
+            this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
+                { $set: { "match.$.ocean": ocean } }, (err, data) => {
+                    if (err) return reject(err);
+                    resolve(data.result.n > 0 ? data : false);
+                })
+        })
+    }
+
+    decreaseShipLeft(player_name) {
+        this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
+            { $inc: { "match.$.ship_left": -1 } }, (err, data)=>{
+                console.log(data);
+            })
     }
 }
 
