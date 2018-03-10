@@ -80,7 +80,7 @@ class mongodb {
         });
     }
 
-    giveupMatch(player_name) {
+    endMatch(player_name) {
         return new Promise((resolve, reject) => {
             this.db.collection('battleship').update({ player_name: player_name, "match.ending": false }, { $set: { "match.$.ending": true } }, (err, data) => {
                 if (err) return reject(err);
@@ -116,10 +116,11 @@ class mongodb {
                 hit,
                 time: new Date()
             }
-            this.db.collection('battleship').update({ player_name: player_name, "match.ending": false }, { $push: { "match.$.shooted": shoot_data } }, (err, data) => {
-                if (err) return reject(err);
-                resolve(data.result.n > 0 ? data : false);
-            })
+            this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
+                { $push: { "match.$.shooted": shoot_data }, $inc: { "match.$.turn": 1 } }, (err, data) => {
+                    if (err) return reject(err);
+                    resolve(data.result.n > 0 ? data : false);
+                })
         })
     }
 
@@ -154,9 +155,7 @@ class mongodb {
 
     decreaseShipLeft(player_name) {
         this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
-            { $inc: { "match.$.ship_left": -1 } }, (err, data)=>{
-                console.log(data);
-            })
+            { $inc: { "match.$.ship_left": -1 } })
     }
 }
 

@@ -1,8 +1,6 @@
 const db = require('../app').db;
 const game_config = require('../config').game;
 const aspect = { horizontal: 0, vertical: 1 };
-// Add body-parser and export database
-// Add game config data
 
 exports.startMatch = (player_name) => {
     return new Promise((resolve, reject) => {
@@ -45,9 +43,8 @@ exports.deactivePlayer = (player_name) => {
 exports.giveup = (player_name) => {
     return new Promise((resolve, reject) => {
         checkPlayerData(player_name).then((result) => {
-            console.log(result);
             if (result) {
-                db.giveupMatch(player_name).then(result => {
+                db.endMatch(player_name).then(result => {
                     resolve({ err: undefined, result: result ? result.result.ok == 1 : false });
                 }, err => reject(err))
             } else {
@@ -73,9 +70,9 @@ exports.shoot = (player_name, x, y) => {
                                     ocean[hit_index].hit = true;
                                     db.updateShootedShip(player_name, ocean).then((result) => { // update ocean's hit data
                                         if (checkIfShipSunk(ocean, ocean[hit_index].ship_id)) {
-                                            sunkShip(player_name, ocean[hit_index].ship_id).then(({ err, ship }) => { // update ship sunk
+                                            sunkShip(player_name, ocean[hit_index].ship_id).then(({ err, ship, win }) => { // update ship sunk
                                                 if (err) return resolve({ err });
-                                                resolve({ err: undefined, msg: `You just sank the ${ship.ship_name}` });
+                                                resolve({ err: undefined, msg: win ? `Win ! You completed the game in ${win.turns} moves` : `You just sank the ${ship.ship_name}` });
                                             })
                                         } else {
                                             resolve({ err: undefined, msg: "Hit" });
@@ -130,7 +127,13 @@ function sunkShip(player_name, ship_id) {
             db.updateShips(player_name, ships).then((result) => {
                 if (result) {
                     db.decreaseShipLeft(player_name);
-                    resolve({ err: undefined, ship: ships[sunk_index] });
+                    if (match_data.ship_left - 1 == 0) { // no ship left
+                        db.endMatch(player_name).then(result => {
+                            resolve({ err: undefined, ship: ships[sunk_index], win: { turns: match_data.turn + 1 } });
+                        }, err => reject(err))
+                    } else {
+                        resolve({ err: undefined, ship: ships[sunk_index] });
+                    }
                 } else {
                     resolve({ err: "Ocean data not updated." });
                 }
