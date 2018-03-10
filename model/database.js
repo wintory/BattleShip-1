@@ -31,7 +31,6 @@ class mongodb {
 
     close() {
         this.db.close();
-        // delete this;
     }
 
     getPlayerData(player_name) {
@@ -49,7 +48,7 @@ class mongodb {
                 player_name: player_name,
                 created: new Date(),
                 stats: {
-                    game: 0,
+                    win: 0,
                     hits: 0,
                     miss: 0,
                     sunk: 0

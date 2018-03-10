@@ -144,7 +144,7 @@ function sunkShip(player_name, ship_id) {
 
 function generateMatch() {
     let match_data = {
-        turn: 0,
+        turn: 1,
         ship_left: 0,
         ending: false,
         shooted: [],
