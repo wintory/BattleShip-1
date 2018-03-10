@@ -129,6 +129,7 @@ function sunkShip(player_name, ship_id) {
                     db.decreaseShipLeft(player_name);
                     if (match_data.ship_left - 1 == 0) { // no ship left
                         db.endMatch(player_name).then(result => {
+                            db.increaseWin(player_name);
                             resolve({ err: undefined, ship: ships[sunk_index], win: { turns: match_data.turn + 1 } });
                         }, err => reject(err))
                     } else {

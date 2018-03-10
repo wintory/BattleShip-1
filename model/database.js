@@ -139,7 +139,7 @@ class mongodb {
     updateShips(player_name, ships) {
         return new Promise((resolve, reject) => {
             this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
-                { $set: { "match.$.ships": ships }, }, (err, data) => {
+                { $set: { "match.$.ships": ships }, $inc: { "stats.sunk": 1 }  }, (err, data) => {
                     if (err) return reject(err);
                     resolve(data.result.n > 0 ? data : false);
                 })
@@ -149,7 +149,7 @@ class mongodb {
     updateOcean(player_name, ocean) {
         return new Promise((resolve, reject) => {
             this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
-                { $set: { "match.$.ocean": ocean }, $inc: { "stats.sunk": 1 } }, (err, data) => {
+                { $set: { "match.$.ocean": ocean } }, (err, data) => {
                     if (err) return reject(err);
                     resolve(data.result.n > 0 ? data : false);
                 })
@@ -159,6 +159,11 @@ class mongodb {
     decreaseShipLeft(player_name) {
         this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
             { $inc: { "match.$.ship_left": -1 } })
+    }
+
+    increaseWin(player_name){
+        this.db.collection('battleship').update({ player_name: player_name},
+            { $inc: { "match.stats.win": 1 } })
     }
 }
 
