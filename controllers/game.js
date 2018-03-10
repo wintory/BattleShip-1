@@ -33,4 +33,20 @@ router.delete('/deactive', (req, res) => {
     }
 })
 
+router.post('/giveup', (req, res) => {
+    if (req.body.player_name) {
+        game_system.giveup(req.body.player_name).then(result => {
+            res.status(200);
+            if (result) {
+                res.json({ status: true, message: "You just giveup on your last match !." });
+            } else {
+                res.json({ status: false, message: "You have no playing match." })
+            }
+        }, err => {
+            res.status(500);
+            res.json({ error: err });
+        });
+    }
+})
+
 module.exports = router

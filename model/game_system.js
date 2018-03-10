@@ -11,8 +11,6 @@ exports.startMatch = (player_name) => {
                 if (data.match.filter(match => !match.ending).length == 0) {
                     // don't have playing match
                     db.createNewMatch(player_name, generateMatch()).then((result) => {
-                        console.log(result);
-
                         if (result) {
                             resolve(true);
                         }
@@ -43,6 +41,16 @@ exports.deactivePlayer = (player_name) => {
         }, err => reject(err))
     })
 }
+
+exports.giveup = (player_name)=>{
+    return new Promise((resolve,reject)=>{
+        db.giveupMatch(player_name).then(result =>{
+            resolve(result.ok == 1);
+        }, err => reject(err))
+    })
+}
+
+
 
 function generateMatch() {
     let match_data = {

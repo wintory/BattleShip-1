@@ -79,6 +79,15 @@ class mongodb {
             })
         });
     }
+
+    giveupMatch(player_name){
+        return new Promise((resolve,reject)=>{
+            this.db.collection('battleship').update({player_name:player_name, "match.ending":false}, { $set: { "match.$.ending": true } }, (err, data) => {
+                if (err) return reject(err);
+                resolve(data.result.n > 0 ? data : false);
+            })
+        })
+    }
 }
 
 module.exports = mongodb;
