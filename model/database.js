@@ -35,7 +35,7 @@ class mongodb {
     }
 
     getPlayerData(player_name) {
-        return new Promise((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
             this.db.collection('battleship').findOne({ player_name: player_name }, (err, data) => {
                 if (err) return reject(err);
                 resolve(data);
@@ -43,16 +43,16 @@ class mongodb {
         })
     }
 
-    registerNewPlayer(player_name){
-        return new Promise((resolve, reject)=>{
+    registerNewPlayer(player_name) {
+        return new Promise((resolve, reject) => {
             this.db.collection('battleship').insertOne({
-                player_name : player_name,
-                created : new Date(),
+                player_name: player_name,
+                created: new Date(),
                 stats: {
-                    game : 0,
-                    hits : 0,
-                    miss : 0,
-                    sunk : 0
+                    game: 0,
+                    hits: 0,
+                    miss: 0,
+                    sunk: 0
                 },
                 match: []
             }, (err, result) => {
@@ -62,27 +62,71 @@ class mongodb {
         })
     }
 
-    createNewMatch(player_name, new_match){
-        return new Promise((resolve, reject)=>{
-            this.db.collection('battleship').update({player_name:player_name}, { $push: { "match": new_match } }, (err, data) => {
+    createNewMatch(player_name, new_match) {
+        return new Promise((resolve, reject) => {
+            this.db.collection('battleship').update({ player_name: player_name }, { $push: { "match": new_match } }, (err, data) => {
                 if (err) return reject(err);
                 resolve(data.result.n > 0 ? data : false);
             })
         })
     }
 
-    deletePlayer(player_name){
-        return new Promise((resolve, reject)=>{
-            this.db.collection('battleship').remove({player_name:player_name}, (err, result)=>{
+    deletePlayer(player_name) {
+        return new Promise((resolve, reject) => {
+            this.db.collection('battleship').remove({ player_name: player_name }, (err, result) => {
                 if (err) return reject(err);
                 resolve(result);
             })
         });
     }
 
-    giveupMatch(player_name){
-        return new Promise((resolve,reject)=>{
-            this.db.collection('battleship').update({player_name:player_name, "match.ending":false}, { $set: { "match.$.ending": true } }, (err, data) => {
+    giveupMatch(player_name) {
+        return new Promise((resolve, reject) => {
+            this.db.collection('battleship').update({ player_name: player_name, "match.ending": false }, { $set: { "match.$.ending": true } }, (err, data) => {
+                if (err) return reject(err);
+                resolve(data.result.n > 0 ? data : false);
+            })
+        })
+    }
+
+    checkShooted(player_name, x, y) {
+        return new Promise((resolve, reject) => {
+            this.db.collection('battleship').findOne({ player_name: player_name, "match.ending": false, "match.shooted.x": parseInt(x), "match.shooted.y": parseInt(y) }, (err, data) => {
+                if (err) return reject(err);
+                resolve(data);
+            })
+        })
+    }
+
+    getShootPosition(player_name, x, y) {
+        return new Promise((resolve, reject) => {
+            this.db.collection('battleship').findOne({ player_name: player_name, "match.ending": false, "match.ocean.x": parseInt(x), "match.ocean.y": parseInt(y) }, (err, data) => {
+                if (err) return reject(err);
+                let result = data ? data.match.filter(match => !match.ending)[0].ocean : null;
+                resolve(result);
+            })
+        })
+    }
+
+    updateShootedShip(player_name, ocean) {
+        return new Promise((resolve, reject) => {
+            this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
+                { $set: { "match.$.ocean": ocean } }, (err, data) => {
+                    if (err) return reject(err);
+                    resolve(data.result.n > 0 ? data : false);
+                })
+        })
+    }
+
+    addShootData(player_name, x, y, hit) {
+        return new Promise((resolve, reject) => {
+            let shoot_data = {
+                x: parseInt(x),
+                y: parseInt(y),
+                hit,
+                time: new Date()
+            }
+            this.db.collection('battleship').update({ player_name: player_name, "match.ending": false }, { $push: { "match.$.shooted": shoot_data } }, (err, data) => {
                 if (err) return reject(err);
                 resolve(data.result.n > 0 ? data : false);
             })

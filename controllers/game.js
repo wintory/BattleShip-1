@@ -51,4 +51,16 @@ router.post('/giveup', (req, res) => {
     }
 })
 
+router.post('/shoot/:x/:y', (req, res) => {
+    if (req.body.player_name) {
+        game_system.shoot(req.body.player_name, req.params.x, req.params.y).then(({ err, msg }) => {
+            if (err) return res.json({ error: err })
+            console.log(msg);
+            res.json(msg)
+        }, err => {
+            res.status(500);
+            res.json({ error: err });
+        })
+    }
+})
 module.exports = router
