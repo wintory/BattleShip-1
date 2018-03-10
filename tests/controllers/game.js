@@ -251,6 +251,30 @@ describe("Starting API", () => {
         })
     })
 
+    describe("Get match history", () => {
+        it("(/game/match/history) Get match history ", (done) => {
+            chai.request(app.app)
+                .post('/game/match/history')
+                .send({ "player_name": player_name })
+                .end((err, res) => {
+                    assert.equal(res.status, 200);
+                    assert.equal(res.body.status, true);
+                    done();
+                })
+        });
+
+        it("(/game/match/history) Can't get match history of not exist player", (done) => {
+            chai.request(app.app)
+                .post('/game/match/history')
+                .send({ "player_name": not_exist_player })
+                .end((err, res) => {
+                    assert.equal(res.status, 404);
+                    assert.equal(res.body.status, false);
+                    done();
+                })
+        });
+    })
+
     describe("Delete player test", () => {
         it("(/game/deactive) Delete player", (done) => {
             chai.request(app.app)
