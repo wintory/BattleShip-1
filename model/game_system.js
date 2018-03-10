@@ -72,7 +72,7 @@ exports.shoot = (player_name, x, y) => {
                                         if (checkIfShipSunk(ocean, ocean[hit_index].ship_id)) {
                                             sunkShip(player_name, ocean[hit_index].ship_id).then(({ err, ship, win }) => { // update ship sunk
                                                 if (err) return resolve({ err });
-                                                resolve({ err: undefined, msg: win ? `Win ! You completed the game in ${win.turns} moves` : `You just sank the ${ship.ship_name}` });
+                                                resolve({ err: undefined, msg: win ? `Win ! You completed the game in ${win.turns} moves` : `You just sank the ${ship.ship_name}` , win});
                                             })
                                         } else {
                                             resolve({ err: undefined, msg: "Hit" });
