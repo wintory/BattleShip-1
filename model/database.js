@@ -116,8 +116,12 @@ class mongodb {
                 hit,
                 time: new Date()
             }
+            let hit_type = hit ? "stats.hit" : "stats.miss";
             this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
-                { $push: { "match.$.shooted": shoot_data }, $inc: { "match.$.turn": 1 } }, (err, data) => {
+                {
+                    $push: { "match.$.shooted": shoot_data },
+                    $inc: { "match.$.turn": 1, "stats.hit": hit ? 1 : 0, "stats.miss": hit ? 0 : 1 }
+                }, (err, data) => {
                     if (err) return reject(err);
                     resolve(data.result.n > 0 ? data : false);
                 })
@@ -136,7 +140,7 @@ class mongodb {
     updateShips(player_name, ships) {
         return new Promise((resolve, reject) => {
             this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
-                { $set: { "match.$.ships": ships } }, (err, data) => {
+                { $set: { "match.$.ships": ships }, }, (err, data) => {
                     if (err) return reject(err);
                     resolve(data.result.n > 0 ? data : false);
                 })
@@ -146,7 +150,7 @@ class mongodb {
     updateOcean(player_name, ocean) {
         return new Promise((resolve, reject) => {
             this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
-                { $set: { "match.$.ocean": ocean } }, (err, data) => {
+                { $set: { "match.$.ocean": ocean }, $inc: { "stats.sunk": 1 } }, (err, data) => {
                     if (err) return reject(err);
                     resolve(data.result.n > 0 ? data : false);
                 })
