@@ -49,7 +49,7 @@ class mongodb {
                 created: new Date(),
                 stats: {
                     win: 0,
-                    hits: 0,
+                    hit: 0,
                     miss: 0,
                     sunk: 0
                 },
