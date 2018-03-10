@@ -90,10 +90,10 @@ class mongodb {
 
     checkShooted(player_name, x, y) {
         return new Promise((resolve, reject) => {
-            this.db.collection('battleship').findOne({ player_name: player_name, "match.ending": false, "match.shooted.x": parseInt(x), "match.shooted.y": parseInt(y) }, (err, data) => {
-                if (err) return reject(err);
-                resolve(data);
-            })
+            this.getMatchData(player_name).then(match => {
+                let shooted = match.shooted.filter(shoot => (shoot.x == x) && (shoot.y == y));
+                resolve(shooted.length > 0);
+            }, err => reject(err));
         })
     }
 

@@ -62,8 +62,8 @@ exports.shoot = (player_name, x, y) => {
                     x < 0 || y < 0) {
                     return resolve({ err: `Shoot position over map !. You must shoot between (0,0) till (${game_config.size - 1},${game_config.size - 1})` });
                 } else {
-                    db.checkShooted(player_name, x, y).then(result => {
-                        if (!result) {
+                    db.checkShooted(player_name, x, y).then(shoot_duplicate => {
+                        if (!shoot_duplicate) {
                             getShootPosition(player_name, x, y).then(ocean => {
                                 if (ocean) { // hit something 
                                     let hit_index = ocean.findIndex(ship => (ship.x == x) && (ship.y == y))
