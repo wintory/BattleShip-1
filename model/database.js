@@ -172,7 +172,7 @@ class mongodb {
 
     increaseWin(player_name) {
         this.db.collection('battleship').update({ player_name: player_name },
-            { $inc: { "match.stats.win": 1 } })
+            { $inc: { "stats.win": 1 } })
     }
 }
 
