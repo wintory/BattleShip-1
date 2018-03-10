@@ -37,8 +37,9 @@ router.delete('/deactive', (req, res) => {
 
 router.post('/giveup', (req, res) => {
     if (req.body.player_name) {
-        game_system.giveup(req.body.player_name).then(result => {
+        game_system.giveup(req.body.player_name).then(({ err, result }) => {
             res.status(200);
+            if (err) return res.json({ status: false, message: err });
             if (result) {
                 res.json({ status: true, message: "You just giveup on your last match !." });
             } else {
@@ -54,9 +55,8 @@ router.post('/giveup', (req, res) => {
 router.post('/shoot/:x/:y', (req, res) => {
     if (req.body.player_name) {
         game_system.shoot(req.body.player_name, req.params.x, req.params.y).then(({ err, msg }) => {
-            if (err) return res.json({ error: err })
-            console.log(msg);
-            res.json(msg)
+            if (err) return res.json({ status: false, message: err })
+            res.json({ status: true, message: msg })
         }, err => {
             res.status(500);
             res.json({ error: err });
