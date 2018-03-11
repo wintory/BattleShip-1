@@ -33,6 +33,9 @@ Setting server config at `config.json`
 ```
 
 #### Game config
+
+You can change your game config such as ocean size, ship size, ship amount, etc....
+
 ```json
 "game": {
         "size": 10,
@@ -83,7 +86,7 @@ If you want to delete your playing data you must request to `/game/deactive`.
 You can't request new game if your last game not ending yet. If you want to request new game you must give up on your last match by
 request to `/game/giveup` to give up your last match.
 
-Remember to keep your player name, or other player can play your game or deactive your data.
+Do not share your player name to anyone, or other player can play your game or deactive your data.
 
 ## Documents
 
@@ -425,7 +428,7 @@ Javascript
                 "y": 1,
                 "hit": false,
                 "time": "2018-03-10T14:24:06.724Z"
-            } , ..
+            } , ...
         ]
     }
     ```
@@ -511,21 +514,21 @@ Javascript
                     "y": 5,
                     "hit": false,
                     "time": "2018-03-10T08:45:49.791Z"
-                } , ..],
+                } , ...],
             "ships": [
                 {
                     "id": 1,
                     "ship_name": "Battleship",
                     "sunk": true
-                } , ..],
+                } , ...],
             "ocean": [
                 {
                     "x": 4,
                     "y": 7,
                     "ship_id": 1,
                     "hit": true
-                } , ..]
-            } , .. ]
+                } , ...]
+            } , ... ]
     }    
     ```
 * **Error Response:**
