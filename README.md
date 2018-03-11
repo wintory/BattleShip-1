@@ -33,6 +33,9 @@ Setting server config at `config.json`
 ```
 
 #### Game config
+
+You can change your game config such as ocean size, ship size, ship amount, etc....
+
 ```json
 "game": {
         "size": 10,
@@ -74,7 +77,7 @@ npm run test
 In the beginning, you must start your first game by request to `/game/new`, after that you can choose position to shoot in match by request to `/game/shoot/:x/:y`.
 The response will tell you if it hit or miss or you just sank the ship.
 
-You can check your shoot history by request to `/game/shoot/history` or match history `/game/match/history`.
+You can check your shoot history of current match by request to `/game/shoot/history` or check match history `/game/match/history`.
 
 Also if you want to check your stats you can request to `/stats`. The response will show only win,hit,miss and sunk.
 
@@ -83,7 +86,9 @@ If you want to delete your playing data you must request to `/game/deactive`.
 You can't request new game if your last game not ending yet. If you want to request new game you must give up on your last match by
 request to `/game/giveup` to give up your last match.
 
-Remember to keep your player name, or other player can play your game or deactive your data.
+Do not share your player name to anyone, or other player can play your game or deactive your data.
+
+
 
 ## Documents
 
@@ -314,7 +319,17 @@ Javascript
     }
     ```
     OR
-    
+
+  * **Code:** 200 <br />
+    **Content:** 
+    ```json
+    {
+        "status": true,
+        "message": "Hit"
+    }
+    ```
+    OR
+
   * **Code:** 200 <br />
     **Content:** 
     ```json
@@ -401,7 +416,7 @@ Javascript
 
 * **Method:**
 
-  `POST`
+  `GET`
   
 *  **URL Params**
 
@@ -425,7 +440,7 @@ Javascript
                 "y": 1,
                 "hit": false,
                 "time": "2018-03-10T14:24:06.724Z"
-            } , ..
+            } , ...
         ]
     }
     ```
@@ -457,7 +472,7 @@ Javascript
     $.ajax({
       url: "/game/shoot/history",
       dataType: "json",
-      method : "POST",
+      method : "GET",
       data: {
         "player_name": "your_name"
       }
@@ -468,7 +483,7 @@ Javascript
   ```
   Shell
   ```shell
-    curl --request POST \
+    curl --request GET \
       --url http://localhost:3000/game/shoot/history \
       --data player_name=your_name
   ```
@@ -479,11 +494,11 @@ Javascript
 
 * **URL**
 
-  /game/giveup
+  /game/match/history
 
 * **Method:**
 
-  `POST`
+  `GET`
   
 *  **URL Params**
 
@@ -511,21 +526,21 @@ Javascript
                     "y": 5,
                     "hit": false,
                     "time": "2018-03-10T08:45:49.791Z"
-                } , ..],
+                } , ...],
             "ships": [
                 {
                     "id": 1,
                     "ship_name": "Battleship",
                     "sunk": true
-                } , ..],
+                } , ...],
             "ocean": [
                 {
                     "x": 4,
                     "y": 7,
                     "ship_id": 1,
                     "hit": true
-                } , ..]
-            } , .. ]
+                } , ...]
+            } , ... ]
     }    
     ```
 * **Error Response:**
@@ -544,7 +559,7 @@ Javascript
     $.ajax({
       url: "/game/match/history",
       dataType: "json",
-      method : "POST",
+      method : "GET",
       data: {
         "player_name": "your_name"
       }
@@ -555,7 +570,7 @@ Javascript
   ```
   Shell
   ```shell
-    curl --request POST \
+    curl --request GET \
       --url http://localhost:3000/game/match/history \
       --data player_name=your_name
   ```

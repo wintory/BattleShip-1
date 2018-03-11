@@ -174,7 +174,7 @@ describe("Starting API", () => {
 
         it(`(/game/shoot/history) Get shoot history (0,0)`, (done) => {
             chai.request(app.app)
-                .post(`/game/shoot/history`)
+                .get(`/game/shoot/history`)
                 .send({ "player_name": player_name })
                 .end((err, res) => {
                     assert.equal(res.status, 200);
@@ -188,7 +188,7 @@ describe("Starting API", () => {
 
         it(`(/game/shoot/history) Can't get shoot history of not exist player`, (done) => {
             chai.request(app.app)
-                .post(`/game/shoot/history`)
+                .get(`/game/shoot/history`)
                 .send({ "player_name": not_exist_player })
                 .end((err, res) => {
                     assert.equal(res.status, 404);
@@ -199,7 +199,7 @@ describe("Starting API", () => {
 
         it(`(/game/shoot/history) Can't get shoot history without sending player name`, (done) => {
             chai.request(app.app)
-                .post(`/game/shoot/history`)
+                .get(`/game/shoot/history`)
                 .send()
                 .end((err, res) => {
                     assert.equal(res.status, 400);
@@ -342,7 +342,7 @@ describe("Starting API", () => {
     describe("Get match history", () => {
         it("(/game/match/history) Get match history ", (done) => {
             chai.request(app.app)
-                .post('/game/match/history')
+                .get('/game/match/history')
                 .send({ "player_name": player_name })
                 .end((err, res) => {
                     let last_match = res.body.history[res.body.history.length - 1];
@@ -357,7 +357,7 @@ describe("Starting API", () => {
 
         it("(/game/match/history) Can't get match history of not exist player", (done) => {
             chai.request(app.app)
-                .post('/game/match/history')
+                .get('/game/match/history')
                 .send({ "player_name": not_exist_player })
                 .end((err, res) => {
                     assert.equal(res.status, 404);
@@ -368,7 +368,7 @@ describe("Starting API", () => {
 
         it("(/game/match/history) Can't get match history without sending player name", (done) => {
             chai.request(app.app)
-                .post('/game/match/history')
+                .get('/game/match/history')
                 .send()
                 .end((err, res) => {
                     assert.equal(res.status, 400);
