@@ -32,7 +32,17 @@ describe("Starting API", () => {
                 })
         });
 
-        it("(/game/new) Can't new game again without ending last match", (done) => {
+        it("(/game/new) Can't new game without sending player_name", (done) => {
+            chai.request(app.app)
+                .post('/game/new')
+                .send()
+                .end((err, res) => {
+                    assert.equal(res.status, 400);
+                    done();
+                })
+        });
+
+        it("(/game/new) Can't new game again without sending ending last match", (done) => {
             chai.request(app.app)
                 .post('/game/new')
                 .send({ "player_name": player_name })
@@ -61,6 +71,16 @@ describe("Starting API", () => {
                 .end((err, res) => {
                     assert.equal(res.status, 404);
                     assert.equal(res.body.status, false);
+                    done();
+                })
+        });
+
+        it("(/game/giveup) Can't give without sending player name", (done) => {
+            chai.request(app.app)
+                .post('/game/giveup')
+                .send()
+                .end((err, res) => {
+                    assert.equal(res.status, 400);
                     done();
                 })
         });
@@ -132,6 +152,26 @@ describe("Starting API", () => {
                 })
         });
 
+        it(`(/game/shoot/0/0) Can't shooting without sending player_name`, (done) => {
+            chai.request(app.app)
+                .post(`/game/shoot/${0}/${0}`)
+                .send()
+                .end((err, res) => {
+                    assert.equal(res.status, 400);
+                    done();
+                })
+        });
+
+        it(`(/game/shoot/test_x/test_y) Can't shooting with string position`, (done) => {
+            chai.request(app.app)
+                .post(`/game/shoot/test_x/test_y`)
+                .send({ "player_name": player_name })
+                .end((err, res) => {
+                    assert.equal(res.status, 400);
+                    done();
+                })
+        });
+
         it(`(/game/shoot/history) Get shoot history (0,0)`, (done) => {
             chai.request(app.app)
                 .post(`/game/shoot/history`)
@@ -146,13 +186,23 @@ describe("Starting API", () => {
                 })
         });
 
-        it(`(/game/shoot/history) Get shoot history of not exist player`, (done) => {
+        it(`(/game/shoot/history) Can't get shoot history of not exist player`, (done) => {
             chai.request(app.app)
                 .post(`/game/shoot/history`)
                 .send({ "player_name": not_exist_player })
                 .end((err, res) => {
                     assert.equal(res.status, 404);
                     assert.equal(res.body.status, false);
+                    done();
+                })
+        });
+
+        it(`(/game/shoot/history) Can't get shoot history without sending player name`, (done) => {
+            chai.request(app.app)
+                .post(`/game/shoot/history`)
+                .send()
+                .end((err, res) => {
+                    assert.equal(res.status, 400);
                     done();
                 })
         });
@@ -219,6 +269,16 @@ describe("Starting API", () => {
                 .end((err, res) => {
                     assert.equal(res.status, 200);
                     assert.equal(res.body.status, true);
+                    done();
+                })
+        })
+
+        it("(/stats) Can't get status without sending player name", (done) => {
+            chai.request(app.app)
+                .post(`/stats`)
+                .send()
+                .end((err, res) => {
+                    assert.equal(res.status, 400);
                     done();
                 })
         })
@@ -305,6 +365,16 @@ describe("Starting API", () => {
                     done();
                 })
         });
+
+        it("(/game/match/history) Can't get match history without sending player name", (done) => {
+            chai.request(app.app)
+                .post('/game/match/history')
+                .send()
+                .end((err, res) => {
+                    assert.equal(res.status, 400);
+                    done();
+                })
+        });
     })
 
     describe("Delete player test", () => {
@@ -324,6 +394,16 @@ describe("Starting API", () => {
                 .send({ "player_name": not_exist_player })
                 .end((err, res) => {
                     assert.equal(res.status, 404);
+                    done();
+                })
+        });
+
+        it("(/game/deactive) Can't delete player data without sending player name", (done) => {
+            chai.request(app.app)
+                .del('/game/deactive')
+                .send()
+                .end((err, res) => {
+                    assert.equal(res.status, 400);
                     done();
                 })
         });
