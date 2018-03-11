@@ -45,7 +45,7 @@ router.post('/giveup', (req, res) => {
             }
             if (result) {
                 res.status(200);
-                res.json({ status: true, message: "You just giveup on your last match !." });
+                res.json({ status: true, message: "You just give up on your last match !." });
             } else {
                 res.status(200);
                 res.json({ status: false, message: "You have no playing match." })
