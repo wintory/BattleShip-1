@@ -470,7 +470,7 @@ Javascript
     Javascript
   ```javascript
     $.ajax({
-      url: "/game/shoot/history",
+      url: "/game/shoot/history?player_name=your_name",
       dataType: "json",
       method : "GET",
       data: {
@@ -484,7 +484,7 @@ Javascript
   Shell
   ```shell
     curl --request GET \
-      --url http://localhost:3000/game/shoot/history \
+      --url http://localhost:3000/game/shoot/history?player_name=your_name \
       --data player_name=your_name
   ```
 
@@ -557,7 +557,7 @@ Javascript
     Javascript
   ```javascript
     $.ajax({
-      url: "/game/match/history",
+      url: "/game/match/history?player_name=your_name",
       dataType: "json",
       method : "GET",
       data: {
@@ -571,7 +571,7 @@ Javascript
   Shell
   ```shell
     curl --request GET \
-      --url http://localhost:3000/game/match/history \
+      --url http://localhost:3000/game/match/history?player_name=your_name \
       --data player_name=your_name
   ```
   
