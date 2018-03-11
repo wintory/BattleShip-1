@@ -94,8 +94,8 @@ router.post('/shoot/:x/:y', (req, res) => {
 })
 
 router.get('/shoot/history', (req, res) => {
-    if (req.body.player_name) {
-        game_system.getShootHistory(req.body.player_name).then(({ err, history }) => {
+    if (req.query.player_name) {
+        game_system.getShootHistory(req.query.player_name).then(({ err, history }) => {
             if (err) {
                 res.status(404);
                 return res.json({ status: false, message: err })
@@ -117,8 +117,8 @@ router.get('/shoot/history', (req, res) => {
 })
 
 router.get('/match/history', (req, res) => {
-    if (req.body.player_name) {
-        game_system.getMatchHistory(req.body.player_name).then(({ err, history }) => {
+    if (req.query.player_name) {
+        game_system.getMatchHistory(req.query.player_name).then(({ err, history }) => {
             if (err) {
                 res.status(404);
                 return res.json({ status: false, message: err })
