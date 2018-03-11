@@ -100,6 +100,9 @@ describe("Starting API", () => {
                     shoot_count++;
                     if (res.body.message == "Hit") {
                         stats.hit++;
+                    } else if (res.body.message.indexOf('You just sank the') > -1) {
+                        stats.hit++;
+                        stats.sunk++;
                     } else if (res.body.message == "Miss") {
                         stats.miss++;
                     }
@@ -142,12 +145,12 @@ describe("Starting API", () => {
                                     assert.equal(res.status, 200);
                                     if (res.body.status) {
                                         shoot_count++;
-                                        if (res.body.message == "Hit" ) {
+                                        if (res.body.message == "Hit") {
                                             stats.hit++;
-                                        } else if (res.body.message.indexOf('You just sank the')> -1){
+                                        } else if (res.body.message.indexOf('You just sank the') > -1) {
                                             stats.hit++;
                                             stats.sunk++;
-                                        }else if (res.body.message == "Miss") {
+                                        } else if (res.body.message == "Miss") {
                                             stats.miss++;
                                         }
                                     }
@@ -194,7 +197,7 @@ describe("Starting API", () => {
                     done();
                 })
         })
-        
+
         it(`Check stats for shooting count`, (done) => {
             chai.request(app.app)
                 .post(`/stats`)
@@ -257,8 +260,12 @@ describe("Starting API", () => {
                 .post('/game/match/history')
                 .send({ "player_name": player_name })
                 .end((err, res) => {
+                    let last_match = res.body.history[res.body.history.length - 1];
                     assert.equal(res.status, 200);
                     assert.equal(res.body.status, true);
+                    // assert.equal(last_match.turn -1, shoot_count);
+                    assert.equal(last_match.ship_left, 0);
+                    assert.equal(last_match.ending, true);
                     done();
                 })
         });
