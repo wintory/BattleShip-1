@@ -93,7 +93,7 @@ router.post('/shoot/:x/:y', (req, res) => {
     }
 })
 
-router.post('/shoot/history', (req, res) => {
+router.get('/shoot/history', (req, res) => {
     if (req.body.player_name) {
         game_system.getShootHistory(req.body.player_name).then(({ err, history }) => {
             if (err) {
@@ -116,7 +116,7 @@ router.post('/shoot/history', (req, res) => {
     }
 })
 
-router.post('/match/history', (req, res) => {
+router.get('/match/history', (req, res) => {
     if (req.body.player_name) {
         game_system.getMatchHistory(req.body.player_name).then(({ err, history }) => {
             if (err) {
