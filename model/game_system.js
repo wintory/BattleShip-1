@@ -2,6 +2,33 @@ const db = require('../app').db;
 const game_config = require('../config').game;
 const aspect = { horizontal: 0, vertical: 1 };
 
+///////////////////////////
+// Check config
+///////////////////////////
+! function () {
+    let shutdown = (msg) => {
+        console.error(msg);
+        process.exit();
+    }
+    let ship_amount = 0;
+    let ship_occupied = 0;
+    let max_occupied = Math.pow(game_config.size, 2) * 0.25;
+
+    if (game_config.size < 10) { // check game size
+        shutdown("Game size must greater or equal 10.");
+    }
+    for (let ship of game_config.ship_data) {
+        ship_amount += ship.amount;
+        ship_occupied += ship.amount * ship.size;
+    }
+    if (ship_amount <= 0) {
+        shutdown("Must have at least one ship.");
+    } else if (ship_occupied > max_occupied) {
+        shutdown(`Overall ship occupied must less than ${max_occupied}.`)
+    }
+}()
+///////////////////////////
+
 exports.startMatch = (player_name) => {
     return new Promise((resolve, reject) => {
         db.getPlayerData(player_name).then((data) => {
@@ -158,7 +185,7 @@ function sunkShip(player_name, ship_id) {
             ships[sunk_index].sunk = true;
             db.updateShips(player_name, ships).then((result) => {
                 if (result) {
-                    db.decreaseShipLeft(player_name).then(()=>{
+                    db.decreaseShipLeft(player_name).then(() => {
                         if (match_data.ship_left - 1 == 0) { // no ship left
                             db.endMatch(player_name).then(result => {
                                 db.increaseWin(player_name);
