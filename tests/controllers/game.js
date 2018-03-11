@@ -132,6 +132,31 @@ describe("Starting API", () => {
                 })
         });
 
+        it(`(/game/shoot/history) Get shoot history (0,0)`, (done) => {
+            chai.request(app.app)
+                .post(`/game/shoot/history`)
+                .send({ "player_name": player_name })
+                .end((err, res) => {
+                    assert.equal(res.status, 200);
+                    assert.equal(res.body.status, true);
+                    assert.equal(res.body.history.length, 1)
+                    assert.equal(res.body.history[0].x, 0);
+                    assert.equal(res.body.history[0].y, 0);
+                    done();
+                })
+        });
+
+        it(`(/game/shoot/history) Get shoot history of not exist player`, (done) => {
+            chai.request(app.app)
+                .post(`/game/shoot/history`)
+                .send({ "player_name": not_exist_player })
+                .end((err, res) => {
+                    assert.equal(res.status, 404);
+                    assert.equal(res.body.status, false);
+                    done();
+                })
+        });
+
         describe("Gameplay until end", () => {
             let is_ending = false
             for (let x = 0; x < config.game.size; x++) {
