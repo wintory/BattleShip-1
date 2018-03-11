@@ -16,6 +16,9 @@ router.post('/new', (req, res) => {
             res.status(500);
             res.json({ error: err });
         });
+    } else {
+        res.status(400)
+        return res.json({error:"You must provide player name."})
     }
 })
 
@@ -33,6 +36,9 @@ router.delete('/deactive', (req, res) => {
             res.status(500);
             res.json({ error: err });
         });
+    } else {
+        res.status(400)
+        return res.json({error:"You must provide player name."})
     }
 })
 
@@ -54,12 +60,21 @@ router.post('/giveup', (req, res) => {
             res.status(500);
             res.json({ error: err });
         });
+    } else {
+        res.status(400)
+        return res.json({error:"You must provide player name."})
     }
 })
 
 router.post('/shoot/:x/:y', (req, res) => {
+    let x = parseInt(req.params.x);
+    let y = parseInt(req.params.y);
+    if(isNaN(x) || isNaN(y)){
+        res.status(400);
+        return res.json({error:"Position must be integer."})
+    }
     if (req.body.player_name) {
-        game_system.shoot(req.body.player_name, req.params.x, req.params.y).then(({ err, not_found, msg, win }) => {
+        game_system.shoot(req.body.player_name, x, y).then(({ err, not_found, msg, win }) => {
             if (err) {
                 if (not_found) {
                     res.status(404);
@@ -72,6 +87,9 @@ router.post('/shoot/:x/:y', (req, res) => {
             res.status(500);
             res.json({ error: err });
         })
+    } else {
+        res.status(400)
+        return res.json({error:"You must provide player name."})
     }
 })
 
@@ -92,6 +110,9 @@ router.post('/shoot/history', (req, res) => {
             res.status(500);
             res.json({ error: err });
         })
+    } else {
+        res.status(400)
+        return res.json({error:"You must provide player name."})
     }
 })
 
@@ -112,6 +133,9 @@ router.post('/match/history', (req, res) => {
             res.status(500);
             res.json({ error: err });
         })
+    } else {
+        res.status(400)
+        return res.json({error:"You must provide player name."})
     }
 })
 

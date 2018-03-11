@@ -16,6 +16,9 @@ router.post('/', (req, res) => {
             res.status(500);
             res.json({ error: err });
         });
+    } else {
+        res.status(400)
+        return res.json({error:"You must provide player name."})
     }
 })
 
