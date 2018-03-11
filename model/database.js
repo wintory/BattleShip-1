@@ -114,9 +114,9 @@ class mongodb {
         })
     }
 
-    getHistoryMatch(player_name){
-        return new Promise((resolve,reject)=>{
-            this.db.collection('battleship').findOne({ player_name: player_name}, (err, data) => {
+    getHistoryMatch(player_name) {
+        return new Promise((resolve, reject) => {
+            this.db.collection('battleship').findOne({ player_name: player_name }, (err, data) => {
                 if (err) return reject(err);
                 resolve(data && data.match ? data.match.filter(match => match.ending) : undefined);
             })
@@ -184,8 +184,13 @@ class mongodb {
     }
 
     decreaseShipLeft(player_name) {
-        this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
-            { $inc: { "match.$.ship_left": -1 } })
+        return new Promise((resolve, reject) => {
+            this.db.collection('battleship').update({ player_name: player_name, "match.ending": false },
+                { $inc: { "match.$.ship_left": -1 } }, (err, data)=>{
+                    if (err) return reject(err);
+                    resolve(data.result.n > 0 ? data : false);
+                })
+        });
     }
 
     increaseWin(player_name) {

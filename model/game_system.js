@@ -158,15 +158,16 @@ function sunkShip(player_name, ship_id) {
             ships[sunk_index].sunk = true;
             db.updateShips(player_name, ships).then((result) => {
                 if (result) {
-                    db.decreaseShipLeft(player_name);
-                    if (match_data.ship_left - 1 == 0) { // no ship left
-                        db.endMatch(player_name).then(result => {
-                            db.increaseWin(player_name);
-                            resolve({ err: undefined, ship: ships[sunk_index], win: { turns: match_data.turn } });
-                        }, err => reject(err))
-                    } else {
-                        resolve({ err: undefined, ship: ships[sunk_index] });
-                    }
+                    db.decreaseShipLeft(player_name).then(()=>{
+                        if (match_data.ship_left - 1 == 0) { // no ship left
+                            db.endMatch(player_name).then(result => {
+                                db.increaseWin(player_name);
+                                resolve({ err: undefined, ship: ships[sunk_index], win: { turns: match_data.turn } });
+                            }, err => reject(err))
+                        } else {
+                            resolve({ err: undefined, ship: ships[sunk_index] });
+                        }
+                    }, err => reject(err));
                 } else {
                     resolve({ err: "Ocean data not updated." });
                 }
