@@ -74,7 +74,7 @@ npm run test
 
 ## How to play
 
-In the beginning, you must start your first game by request to `/game/new`, after that you can choose position to shoot in match by request to `/game/shoot/:x/:y`.
+In the beginning, you must start your first match by request to `/game/new`, after that you can choose position to shoot in match by request to `/game/shoot/:x/:y`.
 The response will tell you if it hit or miss or you just sank the ship.
 
 You can check your shoot history of current match by request to `/game/shoot/history` or check match history `/game/match/history`.
@@ -83,10 +83,10 @@ Also if you want to check your stats you can request to `/stats`. The response w
 
 If you want to delete your playing data you must request to `/game/deactive`.
 
-You can't request new game if your last game not ending yet. If you want to request new game you must give up on your last match by
+You can't request new match if your last match is still on going. If you want to request new match you must give up on your last match by
 request to `/game/giveup` to give up your last match.
 
-Do not share your player name to anyone, or other player can play your game or deactive your data.
+Do not share your player name to anyone, or other player can play your match or deactive your data.
 
 
 
