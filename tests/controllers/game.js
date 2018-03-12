@@ -28,6 +28,8 @@ describe("Starting API", () => {
                 .send({ "player_name": player_name })
                 .end((err, res) => {
                     assert.equal(res.status, 201);
+                    assert.equal(res.body.status, true);
+                    assert.equal(res.body.map_size, config.game.size);
                     done();
                 })
         });
