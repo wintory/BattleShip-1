@@ -22,9 +22,9 @@ router.post('/new', (req, res) => {
     }
 })
 
-router.delete('/deactive', (req, res) => {
+router.delete('/deactivate', (req, res) => {
     if (req.body.player_name) {
-        game_system.deactivePlayer(req.body.player_name).then(result => {
+        game_system.deactivatePlayer(req.body.player_name).then(result => {
             if (result) {
                 res.status(200);
                 res.json({ status: true, message: "Delete player successful !." });

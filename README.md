@@ -74,19 +74,19 @@ npm run test
 
 ## How to play
 
-In the beginning, you must start your first match by request to `/game/new`, after that you can choose position to shoot in match by request to `/game/shoot/:x/:y`.
+In the beginning, you must start your first match by request to `/game/new`, after that you can choose a position to shoot in match by request to `/game/shoot/:x/:y`.
 The response will tell you if it hit or miss or you just sank the ship.
 
-You can check your shoot history of current match by request to `/game/shoot/history` or check match history `/game/match/history`.
+You can check your shoot history of the current match by request to `/game/shoot/history` or check match history `/game/match/history`.
 
-Also if you want to check your stats you can request to `/stats`. The response will show only win,hit,miss and sunk.
+Also, if you want to check your stats you can request to `/stats`. The response will show only win,hit,miss and sunk.
 
-If you want to delete your playing data you must request to `/game/deactive`.
+If you want to delete your player data, you must request to `/game/deactivate`.
 
-You can't request new match if your last match is still on going. If you want to request new match you must give up on your last match by
+You can't request new match if your last match is still ongoing. If you want to request a new match you must give up on your last match by
 request to `/game/giveup` to give up your last match.
 
-Do not share your player name to anyone, or other player can play your match or deactive your data.
+Do not share your player name to anyone, or another player can play your match or deactivate your data.
 
 
 
@@ -221,13 +221,13 @@ Javascript
       --data player_name=your_name
   ```
 
-**Deactive player**
+**Deactivate player**
 ----
   Delete player data and returns result as json data.
 
 * **URL**
 
-  /game/deactive
+  /game/deactivate
 
 * **Method:**
 
@@ -268,7 +268,7 @@ Javascript
     Javascript
   ```javascript
     $.ajax({
-      url: "/game/deactive",
+      url: "/game/deactivate",
       dataType: "json",
       method : "DELETE",
       data: {
@@ -282,7 +282,7 @@ Javascript
   Shell
   ```shell
     curl --request DELETE \
-      --url http://localhost:3000/game/deactive \
+      --url http://localhost:3000/game/deactivate \
       --data player_name=your_name
   ```
   

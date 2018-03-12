@@ -380,9 +380,9 @@ describe("Starting API", () => {
     })
 
     describe("Delete player test", () => {
-        it("(/game/deactive) Delete player", (done) => {
+        it("(/game/deactivate) Delete player", (done) => {
             chai.request(app.app)
-                .del('/game/deactive')
+                .del('/game/deactivate')
                 .send({ "player_name": player_name })
                 .end((err, res) => {
                     assert.equal(res.status, 200);
@@ -390,9 +390,9 @@ describe("Starting API", () => {
                 })
         });
 
-        it("(/game/deactive) Can't delete not exist player", (done) => {
+        it("(/game/deactivate) Can't delete not exist player", (done) => {
             chai.request(app.app)
-                .del('/game/deactive')
+                .del('/game/deactivate')
                 .send({ "player_name": not_exist_player })
                 .end((err, res) => {
                     assert.equal(res.status, 404);
@@ -400,9 +400,9 @@ describe("Starting API", () => {
                 })
         });
 
-        it("(/game/deactive) Can't delete player data without sending player name", (done) => {
+        it("(/game/deactivate) Can't delete player data without sending player name", (done) => {
             chai.request(app.app)
-                .del('/game/deactive')
+                .del('/game/deactivate')
                 .send()
                 .end((err, res) => {
                     assert.equal(res.status, 400);
