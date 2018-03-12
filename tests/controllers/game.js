@@ -29,7 +29,6 @@ describe("Starting API", () => {
                 .end((err, res) => {
                     assert.equal(res.status, 201);
                     assert.equal(res.body.status, true);
-                    assert.equal(res.body.map_size, config.game.size);
                     done();
                 })
         });
@@ -174,9 +173,9 @@ describe("Starting API", () => {
                 })
         });
 
-        it(`(/game/shoot/history) Get shoot history (0,0)`, (done) => {
+        it(`(/game/shoot/history?player_name=${player_name}) Get shoot history (0,0)`, (done) => {
             chai.request(app.app)
-                .get(`/game/shoot/history`)
+                .get(`/game/shoot/history?player_name=${player_name}`)
                 .send({ "player_name": player_name })
                 .end((err, res) => {
                     assert.equal(res.status, 200);
@@ -188,9 +187,9 @@ describe("Starting API", () => {
                 })
         });
 
-        it(`(/game/shoot/history) Can't get shoot history of not exist player`, (done) => {
+        it(`(/game/shoot/history?player_name=${not_exist_player}) Can't get shoot history of not exist player`, (done) => {
             chai.request(app.app)
-                .get(`/game/shoot/history`)
+                .get(`/game/shoot/history?player_name=${not_exist_player}`)
                 .send({ "player_name": not_exist_player })
                 .end((err, res) => {
                     assert.equal(res.status, 404);
@@ -342,9 +341,9 @@ describe("Starting API", () => {
     })
 
     describe("Get match history", () => {
-        it("(/game/match/history) Get match history ", (done) => {
+        it(`(/game/match/history?player_name=${player_name}) Get match history `, (done) => {
             chai.request(app.app)
-                .get('/game/match/history')
+                .get(`/game/match/history?player_name=${player_name}`)
                 .send({ "player_name": player_name })
                 .end((err, res) => {
                     let last_match = res.body.history[res.body.history.length - 1];
@@ -357,9 +356,9 @@ describe("Starting API", () => {
                 })
         });
 
-        it("(/game/match/history) Can't get match history of not exist player", (done) => {
+        it(`(/game/match/history?player_name=${not_exist_player}) Can't get match history of not exist player`, (done) => {
             chai.request(app.app)
-                .get('/game/match/history')
+                .get(`/game/match/history?player_name=${not_exist_player}`)
                 .send({ "player_name": not_exist_player })
                 .end((err, res) => {
                     assert.equal(res.status, 404);
