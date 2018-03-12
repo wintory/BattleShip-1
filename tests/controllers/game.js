@@ -350,7 +350,7 @@ describe("Starting API", () => {
                     let last_match = res.body.history[res.body.history.length - 1];
                     assert.equal(res.status, 200);
                     assert.equal(res.body.status, true);
-                    // assert.equal(last_match.turn -1, shoot_count);
+                    assert.equal(last_match.turn -1, shoot_count);
                     assert.equal(last_match.ship_left, 0);
                     assert.equal(last_match.ending, true);
                     done();
