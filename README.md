@@ -120,7 +120,8 @@ Do not share your player name to anyone, or other player can play your match or 
     ```json
     {
         "status": true,
-        "message": "New game succesful !."
+        "message": "New game succesful !.",
+        "map_size": 10
     }
     ```
  

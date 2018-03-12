@@ -7,7 +7,7 @@ router.post('/new', (req, res) => {
         game_system.startMatch(req.body.player_name).then(result => {
             if (result) {
                 res.status(201);
-                res.json({ status: true, message: "New game succesful !." });
+                res.json({ status: true, message: "New game succesful !." , map_size:result.map_size});
             } else {
                 res.status(200);
                 res.json({ status: false, message: "You not finish your last match yet. " })

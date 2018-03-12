@@ -37,7 +37,7 @@ exports.startMatch = (player_name) => {
                     // don't have playing match
                     db.createNewMatch(player_name, generateMatch()).then((result) => {
                         if (result) {
-                            resolve(true);
+                            resolve({map_size:game_config.size});
                         }
                     }, err => reject(err))
                 } else {
