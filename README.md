@@ -518,6 +518,7 @@ Javascript
     {
         "status": true,
         "history": [{
+            "map_size":10,
             "turn": 7,
             "ship_left": 9,
             "ending": true,

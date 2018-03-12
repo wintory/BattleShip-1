@@ -49,7 +49,7 @@ exports.startMatch = (player_name) => {
                     if (result.result.ok) {
                         db.createNewMatch(result.ops[0].player_name, generateMatch()).then((result) => {
                             if (result) {
-                                resolve(true);
+                                resolve({map_size:game_config.size});
                             }
                         }, err => reject(err))
                     }
@@ -85,10 +85,11 @@ exports.shoot = (player_name, x, y) => {
     return new Promise((resolve, reject) => {
         checkPlayerData(player_name).then((result) => {
             if (result) { // have player data
-                if (result.match && result.match.filter(match => !match.ending).length > 0) { // have playing match
-                    if (x >= game_config.size || y >= game_config.size ||
+                let playing_match = result.match.filter(match => !match.ending);
+                if (result.match && playing_match.length > 0) { // have playing match
+                    if (x >= playing_match[0].map_size || y >= playing_match[0].map_size ||
                         x < 0 || y < 0) {
-                        return resolve({ err: `Shoot position over map !. You must shoot between (0,0) till (${game_config.size - 1},${game_config.size - 1})` });
+                        return resolve({ err: `Shoot position over map !. You must shoot between (0,0) till (${playing_match[0].map_size - 1},${playing_match[0].map_size - 1})` });
                     } else {
                         db.checkShooted(player_name, x, y).then(shoot_duplicate => {
                             if (!shoot_duplicate) {
@@ -206,6 +207,7 @@ function sunkShip(player_name, ship_id) {
 function generateMatch() {
     let match_data = {
         turn: 1,
+        map_size : game_config.size,
         ship_left: 0,
         ending: false,
         shooted: [],

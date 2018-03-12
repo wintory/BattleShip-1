@@ -29,6 +29,7 @@ describe("Starting API", () => {
                 .end((err, res) => {
                     assert.equal(res.status, 201);
                     assert.equal(res.body.status, true);
+                    assert.equal(res.body.map_size, config.game.size);
                     done();
                 })
         });
