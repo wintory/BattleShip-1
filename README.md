@@ -577,6 +577,74 @@ Javascript
       --data player_name=your_name
   ```
   
+**Get player stats**
+----
+  Returns result as json data.
+
+* **URL**
+
+  /stats
+
+* **Method:**
+
+  `GET`
+  
+*  **URL Params**
+
+   **Required:**
+ 
+   None
+* **Data Params**
+
+  `player_name` : player name
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** 
+    ```json
+    {
+        "status": true,
+        "stats": {
+            "game": 0,
+            "hits": 0,
+            "miss": 0,
+            "sunk": 0
+        }
+    } 
+    ```
+* **Error Response:**
+  * **Code:** 404 <br />
+    **Content:**      
+    ```json
+    {
+        "status": false,
+        "message": "Player not found."
+    }
+    ```
+    
+* **Sample Call**
+    Javascript
+  ```javascript
+    $.ajax({
+      url: "/stats?player_name=your_name",
+      dataType: "json",
+      method : "GET",
+      data: {
+        "player_name": "your_name"
+      }
+      success : function(r) {
+        console.log(r);
+      }
+    });
+  ```
+  Shell
+  ```shell
+    curl --request GET \
+      --url http://localhost:3000/stats?player_name=your_name \
+      --data player_name=your_name
+  ```
+  
 ## Built With
 
 * [NodeJS](https://nodejs.org/en/)
