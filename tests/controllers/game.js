@@ -255,7 +255,7 @@ describe("Starting API", () => {
     describe("Player stats test", () => {
         it('(/stats) Get status of player', (done) => {
             chai.request(app.app)
-                .post(`/stats`)
+                .get(`/stats`)
                 .send({ "player_name": player_name })
                 .end((err, res) => {
                     assert.equal(res.status, 200);
@@ -266,18 +266,18 @@ describe("Starting API", () => {
 
         it("(/stats) Can't get status of not exist player", (done) => {
             chai.request(app.app)
-                .post(`/stats`)
-                .send({ "player_name": player_name })
+                .get(`/stats`)
+                .send({ "player_name": not_exist_player })
                 .end((err, res) => {
-                    assert.equal(res.status, 200);
-                    assert.equal(res.body.status, true);
+                    assert.equal(res.status, 404);
+                    assert.equal(res.body.status, false);
                     done();
                 })
         })
 
         it("(/stats) Can't get status without sending player name", (done) => {
             chai.request(app.app)
-                .post(`/stats`)
+                .get(`/stats`)
                 .send()
                 .end((err, res) => {
                     assert.equal(res.status, 400);
@@ -287,7 +287,7 @@ describe("Starting API", () => {
 
         it(`Check stats for shooting count`, (done) => {
             chai.request(app.app)
-                .post(`/stats`)
+                .get(`/stats`)
                 .send({ "player_name": player_name })
                 .end((err, res) => {
                     assert.equal(res.status, 200);
@@ -298,7 +298,7 @@ describe("Starting API", () => {
 
         it(`Check stats for hit`, (done) => {
             chai.request(app.app)
-                .post(`/stats`)
+                .get(`/stats`)
                 .send({ "player_name": player_name })
                 .end((err, res) => {
                     assert.equal(res.status, 200);
@@ -309,7 +309,7 @@ describe("Starting API", () => {
 
         it(`Check stats for miss`, (done) => {
             chai.request(app.app)
-                .post(`/stats`)
+                .get(`/stats`)
                 .send({ "player_name": player_name })
                 .end((err, res) => {
                     assert.equal(res.status, 200);
@@ -320,7 +320,7 @@ describe("Starting API", () => {
 
         it(`Check stats for sunk`, (done) => {
             chai.request(app.app)
-                .post(`/stats`)
+                .get(`/stats`)
                 .send({ "player_name": player_name })
                 .end((err, res) => {
                     assert.equal(res.status, 200);
@@ -331,7 +331,7 @@ describe("Starting API", () => {
 
         it(`Check stats for win match`, (done) => {
             chai.request(app.app)
-                .post(`/stats`)
+                .get(`/stats`)
                 .send({ "player_name": player_name })
                 .end((err, res) => {
                     assert.equal(res.status, 200);
